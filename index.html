@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MD Editor</title>
+  <meta name="description" content="A standalone markdown editor with live preview and syntax linting." />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" />
+  <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" disabled />
+</head>
+<body>
+  <header id="toolbar">
+    <div class="toolbar-group">
+      <button id="btn-open" title="Open (Ctrl/Cmd+O)">Open</button>
+      <button id="btn-save" title="Save (Ctrl/Cmd+S)">Save</button>
+      <button id="btn-save-as" title="Save As">Save As</button>
+    </div>
+    <div class="toolbar-group toolbar-center">
+      <span id="filename">Untitled.md</span>
+      <span id="dirty-indicator" hidden>&bull;</span>
+    </div>
+    <div class="toolbar-group">
+      <span id="issue-count" class="issue-count" hidden></span>
+      <button id="btn-toggle-theme" title="Toggle theme">&#9788;</button>
+    </div>
+  </header>
+
+  <main id="main">
+    <section id="editor-pane" class="pane">
+      <div id="editor"></div>
+    </section>
+    <div id="divider"></div>
+    <section id="preview-pane" class="pane">
+      <div id="preview"></div>
+    </section>
+  </main>
+
+  <footer id="problems-panel" hidden>
+    <div id="problems-header">
+      <span id="problems-title">Problems</span>
+      <button id="btn-close-problems" title="Close">&times;</button>
+    </div>
+    <ul id="problems-list"></ul>
+  </footer>
+
+  <input type="file" id="file-input" accept=".md,.markdown,.txt" hidden />
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
