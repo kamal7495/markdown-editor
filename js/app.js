@@ -1,7 +1,15 @@
 import { createEditor, setEditorTheme } from "./editor.js";
 import { lintMarkdown } from "./linter.js";
 import { renderMarkdown } from "./preview.js";
-import { openFile, saveFile, saveFileAs, isFsAccessSupported } from "./fileio.js";
+import {
+  openFile,
+  saveFile,
+  saveFileAs,
+  isFsAccessSupported,
+  isDirPickerSupported,
+  openFolder,
+  readTreeFile,
+} from "./fileio.js";
 import mermaid from "https://esm.sh/mermaid@10.9.1";
 
 const WELCOME = `# Welcome to MD Editor
@@ -43,12 +51,17 @@ const els = {
   problemsPanel: document.getElementById("problems-panel"),
   problemsList: document.getElementById("problems-list"),
   btnOpen: document.getElementById("btn-open"),
+  btnOpenFolder: document.getElementById("btn-open-folder"),
   btnSave: document.getElementById("btn-save"),
   btnSaveAs: document.getElementById("btn-save-as"),
   btnTheme: document.getElementById("btn-toggle-theme"),
   btnCloseProblems: document.getElementById("btn-close-problems"),
+  btnCloseSidebar: document.getElementById("btn-close-sidebar"),
   divider: document.getElementById("divider"),
   editorPane: document.getElementById("editor-pane"),
+  sidebar: document.getElementById("sidebar"),
+  sidebarTitle: document.getElementById("sidebar-title"),
+  sidebarTree: document.getElementById("sidebar-tree"),
 };
 
 let view;
@@ -189,14 +202,64 @@ function initialTheme() {
 // --- File actions ---
 
 async function doOpen() {
-  if (state.dirty && !confirm("Discard unsaved changes?")) return;
   const result = await openFile();
   if (!result) return;
-  view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: result.text } });
-  state.handle = result.handle;
-  setFilename(result.name);
+  await loadFileIntoEditor(result);
+}
+
+async function loadFileIntoEditor({ name, text, handle }, displayName) {
+  if (state.dirty && !confirm("Discard unsaved changes?")) return false;
+  view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: text } });
+  state.handle = handle;
+  setFilename(displayName || name);
   markDirty(false);
-  updatePreview(result.text);
+  updatePreview(text);
+  return true;
+}
+
+async function doOpenFolder() {
+  const tree = await openFolder();
+  if (!tree) return;
+  els.sidebar.hidden = false;
+  els.sidebarTitle.textContent = tree.name;
+  els.sidebarTitle.title = tree.name;
+  renderTree(tree.children);
+}
+
+function renderTree(nodes) {
+  els.sidebarTree.innerHTML = "";
+  els.sidebarTree.appendChild(renderTreeLevel(nodes));
+}
+
+function renderTreeLevel(nodes) {
+  const ul = document.createElement("ul");
+  for (const node of nodes) {
+    const li = document.createElement("li");
+    if (node.kind === "directory") {
+      const details = document.createElement("details");
+      details.open = true;
+      const summary = document.createElement("summary");
+      summary.textContent = node.name;
+      details.append(summary, renderTreeLevel(node.children));
+      li.appendChild(details);
+    } else {
+      const div = document.createElement("div");
+      div.className = "tree-file";
+      div.textContent = node.name;
+      div.title = node.path;
+      div.addEventListener("click", async () => {
+        const result = await readTreeFile(node);
+        const loaded = await loadFileIntoEditor(result, node.path);
+        if (loaded) {
+          els.sidebarTree.querySelectorAll(".tree-file.active").forEach((el) => el.classList.remove("active"));
+          div.classList.add("active");
+        }
+      });
+      li.appendChild(div);
+    }
+    ul.appendChild(li);
+  }
+  return ul;
 }
 
 async function doSave() {
@@ -225,6 +288,11 @@ async function doSaveAs() {
 
 function initToolbar() {
   els.btnOpen.addEventListener("click", doOpen);
+  els.btnOpenFolder.addEventListener("click", doOpenFolder);
+  els.btnOpenFolder.hidden = !isDirPickerSupported();
+  els.btnCloseSidebar.addEventListener("click", () => {
+    els.sidebar.hidden = true;
+  });
   els.btnSave.addEventListener("click", doSave);
   els.btnSaveAs.addEventListener("click", doSaveAs);
   els.btnTheme.addEventListener("click", () => {

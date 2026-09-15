@@ -15,6 +15,7 @@
   <header id="toolbar">
     <div class="toolbar-group">
       <button id="btn-open" title="Open (Ctrl/Cmd+O)">Open</button>
+      <button id="btn-open-folder" title="Open Folder">Open Folder</button>
       <button id="btn-save" title="Save (Ctrl/Cmd+S)">Save</button>
       <button id="btn-save-as" title="Save As">Save As</button>
     </div>
@@ -29,6 +30,13 @@
   </header>
 
   <main id="main">
+    <aside id="sidebar" hidden>
+      <div id="sidebar-header">
+        <span id="sidebar-title">Folder</span>
+        <button id="btn-close-sidebar" title="Close folder">&times;</button>
+      </div>
+      <div id="sidebar-tree"></div>
+    </aside>
     <section id="editor-pane" class="pane">
       <div id="editor"></div>
     </section>

@@ -1,0 +1,30 @@
+plugins {
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
+}
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+javafx {
+    version = '21.0.4'
+    modules = ['javafx.controls', 'javafx.web']
+}
+
+application {
+    mainClass = 'com.mdeditor.desktop.App'
+}
+
+// The desktop app serves the static site (index.html, css/, js/, ...) directly
+// from the project root, so it stays a single source of truth shared with the
+// GitHub Pages deployment. No resource copying/bundling needed.
+tasks.named('run') {
+    workingDir = rootDir
+}
