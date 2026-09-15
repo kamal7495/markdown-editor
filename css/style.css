@@ -24,6 +24,8 @@
 
 * { box-sizing: border-box; }
 
+[hidden] { display: none !important; }
+
 html, body {
   height: 100%;
   margin: 0;
@@ -98,6 +100,115 @@ button:hover {
   background: var(--warning);
   color: #1a1a1a;
   cursor: pointer;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  min-width: 180px;
+  max-width: 320px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  z-index: 20;
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dropdown-menu button,
+.dropdown-menu .recent-item {
+  border: none;
+  background: none;
+  text-align: left;
+  padding: 6px 8px;
+  border-radius: 5px;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.dropdown-menu button:hover,
+.dropdown-menu .recent-item:hover {
+  background: var(--toolbar-bg);
+  border-color: transparent;
+}
+
+.dropdown-menu .empty {
+  padding: 6px 8px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+#tabbar {
+  display: flex;
+  align-items: center;
+  background: var(--toolbar-bg);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  overflow-x: auto;
+}
+
+#tabbar-list {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px 6px 12px;
+  font-size: 13px;
+  border-right: 1px solid var(--border);
+  cursor: pointer;
+  white-space: nowrap;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.tab.active {
+  color: var(--fg);
+  background: var(--bg);
+}
+
+.tab .tab-dirty {
+  color: var(--accent);
+  font-size: 16px;
+  line-height: 1;
+  width: 8px;
+}
+
+.tab .tab-close {
+  border: none;
+  background: none;
+  padding: 0 4px;
+  font-size: 14px;
+  color: var(--muted);
+  cursor: pointer;
+  line-height: 1;
+}
+
+.tab .tab-close:hover {
+  color: var(--fg);
+}
+
+#btn-new-tab {
+  border: none;
+  border-radius: 0;
+  background: none;
+  padding: 6px 12px;
+  flex-shrink: 0;
 }
 
 #main {

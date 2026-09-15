@@ -16,8 +16,18 @@
     <div class="toolbar-group">
       <button id="btn-open" title="Open (Ctrl/Cmd+O)">Open</button>
       <button id="btn-open-folder" title="Open Folder">Open Folder</button>
+      <div class="dropdown">
+        <button id="btn-recent" title="Recent files">Recent &#9662;</button>
+        <div id="recent-menu" class="dropdown-menu" hidden></div>
+      </div>
       <button id="btn-save" title="Save (Ctrl/Cmd+S)">Save</button>
       <button id="btn-save-as" title="Save As">Save As</button>
+    </div>
+    <div class="toolbar-group">
+      <button id="btn-bold" title="Bold (Ctrl/Cmd+B)"><b>B</b></button>
+      <button id="btn-italic" title="Italic (Ctrl/Cmd+I)"><i>I</i></button>
+      <button id="btn-link" title="Link (Ctrl/Cmd+K)">Link</button>
+      <button id="btn-list" title="Toggle list">List</button>
     </div>
     <div class="toolbar-group toolbar-center">
       <span id="filename">Untitled.md</span>
@@ -28,6 +38,11 @@
       <button id="btn-toggle-theme" title="Toggle theme">&#9788;</button>
     </div>
   </header>
+
+  <div id="tabbar">
+    <div id="tabbar-list"></div>
+    <button id="btn-new-tab" title="New tab">+</button>
+  </div>
 
   <main id="main">
     <aside id="sidebar" hidden>

@@ -4,9 +4,11 @@ import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.SimpleFileServer;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.concurrent.Worker;
 import javafx.scene.Scene;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import netscape.javascript.JSObject;
 
 import java.net.InetSocketAddress;
 import java.nio.file.Path;
@@ -32,6 +34,12 @@ public class App extends Application {
         int port = server.getAddress().getPort();
 
         WebView webView = new WebView();
+        webView.getEngine().getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
+            if (newState == Worker.State.SUCCEEDED) {
+                JSObject window = (JSObject) webView.getEngine().executeScript("window");
+                window.setMember("desktopBridge", new DesktopBridge(stage));
+            }
+        });
         webView.getEngine().load("http://127.0.0.1:" + port + "/index.html");
 
         stage.setTitle("MD Editor");
