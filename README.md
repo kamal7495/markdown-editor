@@ -96,6 +96,21 @@ auto-download a JDK 21 toolchain and JavaFX itself on first run if needed.
 - macOS/Linux: double-click `run.sh` (or run `./run.sh` / `./gradlew run`)
 - Windows: double-click `run.bat` (or run `gradlew.bat run`)
 
+**First run needs internet access** to download Gradle itself, the JavaFX
+runtime, and (if needed) a JDK 21 toolchain — this can take a few minutes
+depending on your connection. Always launch via `run.bat`/`run.sh`/
+`gradlew run`, never by running the compiled class or jar directly (e.g.
+from an IDE's "Run" button) — only the Gradle `run` task is configured
+with the module-path arguments JavaFX needs; running it any other way
+produces a `JavaFX runtime components are missing` error.
+
+**Troubleshooting a download timeout:** if the first run fails with a
+network timeout, check your internet connection/proxy and run it again —
+`run.bat`/`run.sh` will resume rather than starting over. If it still
+fails, delete the partially-downloaded Gradle install
+(`%USERPROFILE%\.gradle\wrapper\dists` on Windows,
+`~/.gradle/wrapper/dists` on macOS/Linux) and retry once more.
+
 This opens the editor in its own native window instead of a browser tab.
 
 ## Deploying
