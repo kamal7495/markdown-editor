@@ -1,0 +1,3 @@
+Main-Class: AttachMain
+Premain-Class: CrawlerAgent
+Agent-Class: CrawlerAgent
